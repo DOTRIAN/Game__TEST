@@ -17,7 +17,7 @@ public class GameLoop extends AnimationTimer {
         /*Nên sau này người ta dùng now để tính delta time, nghĩa là thời gian trôi qua giữa hai frame,
         rồi di chuyển theo thời gian thật thay vì theo số frame*/
         game.update(now);
-        game.render();
+        game.render(now);
     }
 }
 

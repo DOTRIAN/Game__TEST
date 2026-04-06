@@ -1,13 +1,13 @@
 package entity;
 
-public class Enemy {
+public class Wolf {
     private double x;
     private double y;
     private double width;
     private double height;
     private double speed;
 
-    public Enemy(double x,double y,double width,double height,double speed){
+    public Wolf(double x, double y, double width, double height, double speed){
         this.x=x;
         this.y=y;
         this.width=width;
@@ -16,19 +16,22 @@ public class Enemy {
     }
 
     public void moveToward(Player player){
-        if (player.getX()<x){
-            x-= speed;
-        }
-        else if (player.getX()>x){
-            x+=speed;
+        double playerCenterX = player.getX() + player.getWidth() / 2; // tính điểm trung tâm của player
+        double playerCenterY = player.getY() + player.getHeight() / 2;// để bắt được tại trung tâm, ko phải tại góc trái
+
+        double wolfCenterX = x + width / 2;
+        double wolfCenterY = y + height / 2;
+
+        double dx = playerCenterX - wolfCenterX;
+        double dy = playerCenterY - wolfCenterY;
+
+        double distance = Math.sqrt(dx * dx + dy * dy);
+
+        if (distance > 0) {
+            x += (dx / distance) * speed; // chuaanr hóa vector dx/distance giúp tốc độ được đảm bảo, và đuổi theo đúng logic
+            y += (dy / distance) * speed;
         }
 
-        if (player.getY()<y){
-            y-=speed;
-        }
-        else if (player.getY()>y){
-            y+=speed;
-        }
     }
     public void clampPosition (double minX, double minY, double maxWidth, double maxHeight){
         if (x<minX){

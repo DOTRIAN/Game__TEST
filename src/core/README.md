@@ -14,7 +14,7 @@ core/
 
 Khong nen lam trong class nay:
 - Viet logic chien dau cu the.
-- Ve truc tiep tung enemy/player.
+- Ve truc tiep tung wolf/player.
 - Xu ly chi tiet input.
 
 2. `GameLoop.java`

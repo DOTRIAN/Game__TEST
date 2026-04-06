@@ -33,7 +33,7 @@ src/
   Sẽ có nhánh main/dev/các feature branch
 
 feature/player
-feature/enemy
+feature/wolf
 feature/combat
 
 
@@ -149,7 +149,7 @@ Enemy kế thừa từ Character
 Wolf, Boar, Tiger kế thừa từ Enemy
 Ý nghĩa:
 •
-các enemy đều có hp, attack, move(), takeDamage()
+các wolf đều có hp, attack, move(), takeDamage()
 •
 mỗi loại chỉ override phần hành vi riêng
 2.
@@ -164,7 +164,7 @@ abstract class Building
 abstract class Item
 Ý nghĩa:
 •
-không có “enemy chung chung”, chỉ có Wolf, Boar
+không có “wolf chung chung”, chỉ có Wolf, Boar
 •
 nhưng vẫn gom logic chung vào lớp cha
 3.

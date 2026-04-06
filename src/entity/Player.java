@@ -106,4 +106,9 @@ public class Player {
         this.hp = maxHp;
     }
 
+    public void setPosition(double x,double y){
+        this.x = x;
+        this.y = y;
+    } // hàm setter để set vị trí của player
+
 }
