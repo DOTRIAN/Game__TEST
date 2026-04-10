@@ -1,23 +1,27 @@
 package core;
-
+import javafx.application.Application;
+import javafx.stage.Stage;
+import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.animation.AnimationTimer;
-//AnimationTimer của JavaFX đã là một cơ chế chạy lặp theo từng frame, rất hợp để làm game loop đơn giản.
+import javafx.scene.layout.StackPane;
 
 
-public class GameLoop extends AnimationTimer {
+    public class GameLoop extends AnimationTimer {
 
-    private final Game game;
+        private Game game;
 
-    public GameLoop(Game game) {
-        this.game = game;
+        public GameLoop(Game game) {
+            this.game = game;
+        }
+
+@Override
+    public void handle(long now) {
+        
+        game.update();
+        game.render();
+        
     }
-
-    @Override
-    public void handle(long now) { // long là kiểu so nguyên rất lớn, now là thời điểm hiện tại do Animatioon Timer truyền vào mỗi frame
-        /*Nên sau này người ta dùng now để tính delta time, nghĩa là thời gian trôi qua giữa hai frame,
-        rồi di chuyển theo thời gian thật thay vì theo số frame*/
-        game.update(now);
-        game.render(now);
     }
-}
 

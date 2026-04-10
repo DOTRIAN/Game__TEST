@@ -1,0 +1,1 @@
+# Fix Import Errors After File Reorganization\n\n## Progress:\n- [x] Fixed Hud import\n- [x] Restored working Renderer.java with fixed import\n- [ ] Add import core.GameConfig to Game.java\n- [ ] Verify / clean IDE cache\n- [x] Hud / Player methods ok\n\n## Status: Ready to run - reload VSCode projects / build

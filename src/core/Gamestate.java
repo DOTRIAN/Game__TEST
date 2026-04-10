@@ -1,6 +1,6 @@
 package core;
 
-public enum GameState {
+public enum Gamestate {
     MENU,
     PLAYING,
     PAUSED,
