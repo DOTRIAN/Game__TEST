@@ -1,4 +1,7 @@
 package entity;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
+
 
 public class Player {
     private double x;
@@ -110,5 +113,13 @@ public class Player {
         this.x = x;
         this.y = y;
     } // hàm setter để set vị trí của player
+
+    public void draw(GraphicsContext graphicsContext, double cameraX, double cameraY) {
+        double screenX = x - cameraX;
+        double screenY = y - cameraY;
+
+        graphicsContext.setFill(Color.DODGERBLUE);
+        graphicsContext.fillRect(screenX, screenY, width, height);
+    }
 
 }

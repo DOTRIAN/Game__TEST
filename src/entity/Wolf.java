@@ -1,4 +1,10 @@
 package entity;
+import animation.SpriteAnimation;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
+import javafx.scene.paint.Color;
+import animation.SpriteSheetLoader;
+
 
 public class Wolf {
     private double x;
@@ -6,6 +12,7 @@ public class Wolf {
     private double width;
     private double height;
     private double speed;
+    private final SpriteAnimation runAnimation;
 
     public Wolf(double x, double y, double width, double height, double speed){
         this.x=x;
@@ -13,6 +20,11 @@ public class Wolf {
         this.width=width;
         this.height=height;
         this.speed=speed;
+
+        this.runAnimation = new SpriteAnimation(
+                SpriteSheetLoader.loadGrid("file:assets/wolf.png", 2, 3),
+                120_000_000L
+        );
     }
 
     public void moveToward(Player player){
@@ -67,5 +79,31 @@ public class Wolf {
         return height;
     }
 
+    public void draw(GraphicsContext graphicsContext, double cameraX, double cameraY, long now, boolean moving, Player player) {
+        runAnimation.update(now, moving);
+
+        boolean facingRight = (player.getX() + player.getWidth() / 2)
+                >= (x + width / 2);
+
+        Image currentFrame = runAnimation.getCurrentFrame();
+        double screenX = x - cameraX;
+        double screenY = y - cameraY;
+
+        if (currentFrame.isError()) {
+            graphicsContext.setFill(Color.CRIMSON);
+            graphicsContext.fillRect(screenX, screenY, width, height);
+            return;
+        }
+
+        if (facingRight) {
+            graphicsContext.drawImage(currentFrame, screenX, screenY, width, height);
+        } else {
+            graphicsContext.save();
+            graphicsContext.translate(screenX + width, screenY);
+            graphicsContext.scale(-1, 1);  // kĩ thuật lật ảnh
+            graphicsContext.drawImage(currentFrame, 0, 0, width, height);
+            graphicsContext.restore();
+        }
+    }
 }
 

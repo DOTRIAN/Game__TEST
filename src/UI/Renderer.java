@@ -14,6 +14,7 @@ import javafx.stage.Stage;
 import  core.GameConfig;
 import javafx.scene.image.Image;
 import java.util.List;
+import javafx.scene.image.Image;
 
 public class Renderer {
 
@@ -22,11 +23,6 @@ public class Renderer {
     private final Canvas canvas;  // Là vùng để vẽ game
     private final GraphicsContext graphicsContext;   // là cây bút để vẽ canvas
     private final Hud hud;
-
-    private final Image[] wolfRunFrames; // mang chua 4 frame anh
-    private int wolfFrameIndex; //dang ve frame nao, vi du 0,1,2,3
-    private long lastWolfFrameTime;  // lan cuoi doi frame
-    private static final long WOLF_FRAME_DURATION_NS = 120_000_000L; // 120ms= 0,12s
     private final Image backgroundImage;
 
 
@@ -34,17 +30,6 @@ public class Renderer {
         this.canvas = new Canvas(GameConfig.WIDTH, GameConfig.HEIGHT);
         this.graphicsContext = canvas.getGraphicsContext2D();
         this.hud= new Hud();
-        this.wolfRunFrames = new Image[]{
-                new Image("file:assets/wolf_run/wolf_run_0001.png"),
-                new Image("file:assets/wolf_run/wolf_run_0002.png"),
-                new Image("file:assets/wolf_run/wolf_run_0003.png"),
-                new Image("file:assets/wolf_run/wolf_run_0004.png"),
-                new Image("file:assets/wolf_run/wolf_run_0005.png"),
-                new Image("file:assets/wolf_run/wolf_run_0006.png")
-
-        };
-        this.wolfFrameIndex = 0;
-        this.lastWolfFrameTime = 0;
         this.backgroundImage = new Image("file:assets/backgrounds/grass03.png");
 
 
@@ -75,14 +60,7 @@ public class Renderer {
         }
 
         for (Tree tree : trees) {
-            double treeScreenX = tree.getX() - cameraX;
-            double treeScreenY = tree.getY() - cameraY;
-
-            graphicsContext.setFill(Color.SADDLEBROWN);
-            graphicsContext.fillRect(treeScreenX + 24, treeScreenY + 36, 16, 28);
-
-            graphicsContext.setFill(Color.DARKGREEN);
-            graphicsContext.fillOval(treeScreenX, treeScreenY, tree.getWidth(), tree.getHeight() - 12);
+            tree.draw(graphicsContext,cameraX,cameraY);  // tu goij de ve cay
         }
         //4 dongf treen la ve cay
         graphicsContext.setFill(Color.DARKGREEN);
@@ -90,63 +68,10 @@ public class Renderer {
         graphicsContext.fillText("WASD: move", 20, 55);
         graphicsContext.fillText("J: take damage | K: heal", 20, 80);
 
-        graphicsContext.setFill((Color.DODGERBLUE));
-        double playerScreenX = player.getX() - cameraX;
-        double playerScreenY = player.getY() - cameraY;
+        player.draw(graphicsContext,cameraX,cameraY);
 
-        graphicsContext.fillRect(
-                playerScreenX, playerScreenY,
-                player.getWidth(), player.getHeight()
-        );
+        wolf.draw(graphicsContext,cameraX,cameraY,now,wolfMoving,player);
 
-        if (!wolfMoving){
-            wolfFrameIndex = 0;
-        }
-        else if (wolfMoving && now - lastWolfFrameTime >= WOLF_FRAME_DURATION_NS) {
-            //now - lastWolfFrameTime :Tg đã trôi qua bao lâu từ lần đổi frame trước
-            //WOLF_FRAME_DURATION_NS nếu đủ 120ms thì đổi frame
-            wolfFrameIndex = (wolfFrameIndex + 1) % wolfRunFrames.length;
-            //tăng frame lên 1
-            // nếu đg  frame cuối thì quay về frame đầu
-            lastWolfFrameTime = now;
-            // caaph nhật mốc tgian mới
-        }
-
-        boolean facingRight = (player.getX() + player.getWidth() / 2)
-                >= (wolf.getX() + wolf.getWidth() / 2);  // nếu player đứng bên phải wolf thì wolf nhìn phải
-
-        //đoạn này để vẽ wolf
-        Image currentWolfFrame = wolfRunFrames[wolfFrameIndex];
-        // biến tmp để chạy từng ảnh
-        double wolfScreenX = wolf.getX() - cameraX;
-        double wolfScreenY = wolf.getY() - cameraY;
-        if (currentWolfFrame.isError()) {
-            graphicsContext.setFill(Color.CRIMSON);
-            graphicsContext.fillRect(
-                    // ảnh hiện tại cần vẽ
-                    wolf.getX(), wolf.getY(),
-                    wolf.getWidth(), wolf.getHeight()
-            );
-        } else {
-            if (facingRight) { // khi wolf nhin phai
-                graphicsContext.drawImage(
-                        currentWolfFrame,
-                        wolfScreenX, wolfScreenY,
-                        wolf.getWidth(), wolf.getHeight()
-                );
-            } else { // khi wolf nhin trai
-                graphicsContext.save();
-                graphicsContext.translate(wolfScreenX + wolf.getWidth(), wolfScreenY);
-                graphicsContext.scale(-1, 1);
-                graphicsContext.drawImage(
-                        currentWolfFrame,
-                        0, 0,
-                        wolf.getWidth(), wolf.getHeight()
-                );
-                graphicsContext.restore(); // trả canvas về trạng thái bthg
-            }
-
-        }
         hud.render(graphicsContext,player);
 
         if (gameState == GameState.GAME_OVER) {
