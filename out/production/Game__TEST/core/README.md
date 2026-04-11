@@ -1,57 +1,31 @@
-TỔNG QUAN core/
+Tong quan `core/`
+
 core/
-├── Game.java
-├── GameLoop.java
-├── Renderer.java
-├── InputHandler.java
-└── (optional) GameConfig.java
++-- Game.java
++-- GameLoop.java
++-- GameState.java
 
+1. `Game.java`
 
-1. Game.java (QUAN TRỌNG NHẤT)
+- Trung tam dieu phoi toan bo game.
+- Tao va noi cac thanh phan chinh: `GameLoop`, `Renderer`, `InputHandler`.
+- Giu `GameState` hien tai.
+- Goi `update()` va `render()`.
 
-👉 Trung tâm điều phối (orchestrator)
+Khong nen lam trong class nay:
+- Viet logic chien dau cu the.
+- Ve truc tiep tung wolf/player.
+- Xu ly chi tiet input.
 
-Nó làm gì?
-tạo các thành phần:
-GameLoop
-Renderer
-InputHandler
-giữ trạng thái game
-quyết định gọi ai
-Nó KHÔNG làm:
-❌ không tự loop
-❌ không trực tiếp xử lý input
-❌ không vẽ chi tiết
+2. `GameLoop.java`
 
+- Vong lap cua game.
+- Moi frame se goi:
+  `game.update(now);`
+  `game.render();`
 
-2. GameLoop.java
+3. `GameState.java`
 
-👉 Trái tim của game (vòng lặp)
-
-Nó làm gì?
-chạy liên tục (~60 FPS)
-gọi:
-game.update();
-game.render();
-
-
-3. Renderer.java
-
-👉 Chịu trách nhiệm vẽ
-
-Nó làm gì?
-clear màn hình
-vẽ:
-player
-enemy
-UI
-
-4. InputHandler.java
-
-👉 Xử lý bàn phím / chuột
-
-Nó làm gì?
-lắng nghe phím:
-W, A, S, D
-lưu trạng thái:
-boolean up, down, left, right;
+- Enum quan ly trang thai game.
+- Ban dau chi can:
+  `MENU`, `PLAYING`, `PAUSED`, `GAME_OVER`
